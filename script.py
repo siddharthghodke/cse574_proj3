@@ -120,10 +120,8 @@ def blrObjFunction(initialWeights, *args):
 
     #adding the bias column to the n_data
     initialWeights = np.reshape(initialWeights,(n_features+1,1))
-
     
     train_data = np.insert(train_data, 0, 1, axis=1)
-
     
     theta = sigmoid(np.dot(train_data,initialWeights))
 
@@ -132,6 +130,7 @@ def blrObjFunction(initialWeights, *args):
     error = (-1*error)/n_data
 
     error_grad = (theta - labeli) * train_data
+    
     error_grad = np.sum(error_grad, axis=0) 
     
     return error, error_grad
