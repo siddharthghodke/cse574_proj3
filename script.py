@@ -221,7 +221,7 @@ def mlrObjFunction(params, *args):
     n_feature = train_data.shape[1]
     error = 0
     error_grad = np.zeros((n_feature + 1, n_class))
-
+    params = params.reshape((n_feature+1,n_class))   # weights
     ##################
     # YOUR CODE HERE #
     ##################
@@ -231,18 +231,14 @@ def mlrObjFunction(params, *args):
     print(Xd.shape)
     #initialWeights = np.reshape(initialWeights, size(X, 2) + 1, size(T, 2));
     #initialWeights_b = np.reshape(initialWeights_b,(n_feature+1,n_class))
-    print(initialWeights_b.shape)
 
-    Xe = np.exp(Xd.dot(initialWeights_b))
-    print(Xe.shape)
-    Xf = Xe.sum(axis=0)
-    print(Xf.shape)
-    X = np.kron(np.ones((1,Xe.shape[1])),Xf)
-    print(X.shape)
+    print(params.shape)
+    print(params)
 
-    x = Xd.dot(initialWeights_b)
+    x = Xd.dot(params)
+    print(x)
     theta = np.exp(x) / np.sum(np.exp(x), axis=0)
-    print(theta.shape)
+    print(theta)
 
     print(Y.shape)
     # Error
@@ -256,10 +252,12 @@ def mlrObjFunction(params, *args):
 
     # Gradiance
     print(Xd.T.shape)
-    print((theta - labeli).shape)
+    print((theta - Y).shape)
     #grad_matrix = ((Xd.T).dot((theta - labeli))).conj().transpose()
-    error_grad =  Xd.T.dot((theta - Y))
-    #print(error_grad.shape)
+    error_grad = Xd.T.dot((theta - Y))
+    #error_grad = np.sum(error_grad, axis=0) 
+    print(error_grad.shape)
+    print(error_grad)
 
     #error_grad = (grad_matrix.T)
     print(error_grad.flatten().shape)
@@ -288,26 +286,18 @@ def mlrPredict(W, data):
 
     data = np.insert(data, 0, 1, axis=1)
 
-    label = sigmoid(np.dot(data, W))
-    label = np.argmax(label, axis=1).reshape((data.shape[0],1))
+    #label = sigmoid(np.dot(data, W))
+    #label = np.argmax(label, axis=1).reshape((data.shape[0],1))
 	
-    """
-    Xd = np.ones((data.shape[0],data.shape[1]))
-    print(Xd.shape)
-    print(W.shape)
-    Xe = np.exp(Xd.dot(W))
-    print(Xe.shape)
-    Xf = Xe.sum(axis=0)
-    print(Xf.shape)
-    X = np.kron(np.ones((1,Xe.shape[1])),Xf)
-    print(X.shape)
-
-    y = Xe / X
-
-    [M,I] = y.max(1);
-
-    label = I;
-    """    
+    
+    #y = Xe / X
+    x = data.dot(W)
+    theta = np.exp(x) / np.sum(np.exp(x), axis=0)
+    print(theta)
+    #[M,I] = theta.max(1);
+    label = np.argmax(theta, axis=1).reshape((data.shape[0],1))
+    #label = I;
+     
     return label
 
 
