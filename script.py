@@ -207,13 +207,11 @@ def mlrObjFunction(params, *args):
     """
     mlrObjFunction computes multi-class Logistic Regression error function and
     its gradient.
-
     Input:
         initialWeights: the weight vector of size (D + 1) x 1
         train_data: the data matrix of size N x D
         labeli: the label vector of size N x 1 where each entry can be either 0 or 1
                 representing the label of corresponding feature vector
-
     Output:
         error: the scalar value of error function of multi-class logistic regression
         error_grad: the vector of size (D+1) x 10 representing the gradient of
@@ -229,23 +227,57 @@ def mlrObjFunction(params, *args):
     ##################
     # HINT: Do not forget to add the bias term to your input data
 
-    return error, error_grad
+    Xd = np.ones((n_data,n_feature+1))
+    print(Xd.shape)
+    #initialWeights = np.reshape(initialWeights, size(X, 2) + 1, size(T, 2));
+    #initialWeights_b = np.reshape(initialWeights_b,(n_feature+1,n_class))
+    print(initialWeights_b.shape)
+
+    Xe = np.exp(Xd.dot(initialWeights_b))
+    print(Xe.shape)
+    Xf = Xe.sum(axis=0)
+    print(Xf.shape)
+    X = np.kron(np.ones((1,Xe.shape[1])),Xf)
+    print(X.shape)
+
+    x = Xd.dot(initialWeights_b)
+    theta = np.exp(x) / np.sum(np.exp(x), axis=0)
+    print(theta.shape)
+
+    print(Y.shape)
+    # Error
+    error_matrix = Y * np.log(theta)
+    print(error_matrix.shape)
+    error = -(error_matrix.sum()) / n_data
+    print(error)
+    error = (-1.0/n_data) * np.sum((Y * np.log(theta)) + ((1-Y) * np.log(1-theta)))
+
+    print(error)
+
+    # Gradiance
+    print(Xd.T.shape)
+    print((theta - labeli).shape)
+    #grad_matrix = ((Xd.T).dot((theta - labeli))).conj().transpose()
+    error_grad =  Xd.T.dot((theta - Y))
+    #print(error_grad.shape)
+
+    #error_grad = (grad_matrix.T)
+    print(error_grad.flatten().shape)
+
+    return error, error_grad.flatten()
 
 
 def mlrPredict(W, data):
     """
      mlrObjFunction predicts the label of data given the data and parameter W
      of Logistic Regression
-
      Input:
          W: the matrix of weight of size (D + 1) x 10. Each column is the weight
          vector of a Logistic Regression classifier.
          X: the data matrix of size N x D
-
      Output:
          label: vector of size N x 1 representing the predicted label of
          corresponding feature vector given in data matrix
-
     """
     label = np.zeros((data.shape[0], 1))
 
@@ -254,6 +286,28 @@ def mlrPredict(W, data):
     ##################
     # HINT: Do not forget to add the bias term to your input data
 
+    data = np.insert(data, 0, 1, axis=1)
+
+    label = sigmoid(np.dot(data, W))
+    label = np.argmax(label, axis=1).reshape((data.shape[0],1))
+	
+    """
+    Xd = np.ones((data.shape[0],data.shape[1]))
+    print(Xd.shape)
+    print(W.shape)
+    Xe = np.exp(Xd.dot(W))
+    print(Xe.shape)
+    Xf = Xe.sum(axis=0)
+    print(Xf.shape)
+    X = np.kron(np.ones((1,Xe.shape[1])),Xf)
+    print(X.shape)
+
+    y = Xe / X
+
+    [M,I] = y.max(1);
+
+    label = I;
+    """    
     return label
 
 
