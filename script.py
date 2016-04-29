@@ -202,7 +202,6 @@ def blrPredict(W, data):
 
     return label
 
-
 def mlrObjFunction(params, *args):
     """
     mlrObjFunction computes multi-class Logistic Regression error function and
@@ -255,7 +254,7 @@ def mlrObjFunction(params, *args):
     print((theta - Y).shape)
     #grad_matrix = ((Xd.T).dot((theta - labeli))).conj().transpose()
     error_grad = Xd.T.dot((theta - Y))
-    #error_grad = np.sum(error_grad, axis=0) 
+    #error_grad = np.sum(error_grad, axis=1) 
     print(error_grad.shape)
     print(error_grad)
 
@@ -293,12 +292,13 @@ def mlrPredict(W, data):
     #y = Xe / X
     x = data.dot(W)
     theta = np.exp(x) / np.sum(np.exp(x), axis=0)
-    print(theta)
+    print(x)
     #[M,I] = theta.max(1);
-    label = np.argmax(theta, axis=1).reshape((data.shape[0],1))
+    label = np.argmax(x, axis=1).reshape((data.shape[0],1))
     #label = I;
      
     return label
+
 
 
 """
