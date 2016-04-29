@@ -126,7 +126,7 @@ def blrObjFunction(initialWeights, *args):
     theta = sigmoid(np.dot(train_data,initialWeights))
 
     #error = labeli*np.log(theta) + (1-labeli)*np.log(1-theta)
-    error = np.dot(np.transpose(np.log(theta)), ) + np.dot((1-labeli),np.log(1-theta))
+    error = np.dot(np.transpose(np.log(theta)), labeli) + np.dot(np.transpose(np.log(1-theta)),(1-labeli))
 
     error = (-1*error)/n_data
 
