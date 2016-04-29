@@ -120,16 +120,44 @@ def blrObjFunction(initialWeights, *args):
     # HINT: Do not forget to add the bias term to your input data
 
     #adding the bias column to the n_data
-    initialWeights = np.reshape(initialWeights,(n_features+1,1))
+    # initialWeights = np.reshape(initialWeights,(n_features+1,1))
     
-    train_data = np.insert(train_data, 0, 1, axis=1)
+    # train_data = np.insert(train_data, 0, 1, axis=1)
+    # train_data = train_data[:,10]
+
+    # labeli = labeli[:,10]
+
+    # print train_data.shape
+    # print labeli.shape
+    
+    # theta = sigmoid(np.dot(train_data,initialWeights))
+
+    # #error = labeli*np.log(theta) + (1-labeli)*np.log(1-theta)
+    # error = np.dot(np.transpose(np.log(theta)), labeli) + np.dot(np.transpose(np.log(1-theta)),(1-labeli))
+
+    # error = (-1*error)/n_data
+
+    # error_grad = (theta - labeli) * train_data
+    
+    # error_grad = np.sum(error_grad, axis=0) 
+    
+    # return error, error_grad
+
+    initialWeights = initialWeights.reshape((n_feature+1,1))   # weights
+
+    ##################
+    # YOUR CODE HERE #
+    ##################
+    # HINT: Do not forget to add the bias term to your input data
+    
+    #adding the bias column to the n_data
+    train_data = np.hstack((np.ones((n_data,1)),train_data))
     
     theta = sigmoid(np.dot(train_data,initialWeights))
 
-    #error = labeli*np.log(theta) + (1-labeli)*np.log(1-theta)
-    error = np.dot(np.transpose(np.log(theta)), labeli) + np.dot(np.transpose(np.log(1-theta)),(1-labeli))
+    error = labeli * np.log(theta) + (1.0 - labeli) * np.log(1.0 - theta)
 
-    error = (-1*error)/n_data
+    error = -(np.sum(error)/n_data)
 
     error_grad = (theta - labeli) * train_data
     
@@ -160,10 +188,17 @@ def blrPredict(W, data):
     ##################
     # HINT: Do not forget to add the bias term to your input data
 
-    data = np.insert(data, 0, 1, axis=1)
+    # data = np.insert(data, 0, 1, axis=1)
+
+    # label = sigmoid(np.dot(data, W))
+    # label = np.argmax(label, axis=1).reshape((data.shape[0],1))
+
+    # return label
+
+    data = np.hstack((np.ones((data.shape[0], 1)),data))
 
     label = sigmoid(np.dot(data, W))
-    label = np.argmax(label, axis=1).reshape((data.shape[0],1))
+    label = np.argmax(label, axis=1).reshape((n_data,1))
 
     return label
 
