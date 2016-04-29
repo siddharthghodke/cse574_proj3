@@ -338,7 +338,8 @@ for i in range(n_class):
     nn_params = minimize(blrObjFunction, initialWeights, jac=True, args=args, method='CG', options=opts)
     W[:, i] = nn_params.x.reshape((n_feature + 1,))
 
-W = pickle.dump(W,open("params.pickle","wb"))
+with open('params.pickle', 'wb') as f1: 
+    pickle.dump(W, f1)
 
 # Find the accuracy on Training Dataset
 predicted_label = blrPredict(W, train_data)
@@ -430,8 +431,7 @@ plt.ylabel("Mean scores")
 plt.legend(("Train", "Validation", "Test"))
 plt.show()
 
-"""
-Script for Extra Credit Part
+#Script for Extra Credit Part
 
 # FOR EXTRA CREDIT ONLY
 W_b = np.zeros((n_feature + 1, n_class))
@@ -441,6 +441,9 @@ opts_b = {'maxiter': 100}
 args_b = (train_data, Y)
 nn_params = minimize(mlrObjFunction, initialWeights_b, jac=True, args=args_b, method='CG', options=opts_b)
 W_b = nn_params.x.reshape((n_feature + 1, n_class))
+
+with open('params_bonus.pickle', 'wb') as f2:
+    pickle.dump(W_b, f2)
 
 # Find the accuracy on Training Dataset
 predicted_label_b = mlrPredict(W_b, train_data)
@@ -453,4 +456,4 @@ print('\n Validation set Accuracy:' + str(100 * np.mean((predicted_label_b == va
 # Find the accuracy on Testing Dataset
 predicted_label_b = mlrPredict(W_b, test_data)
 print('\n Testing set Accuracy:' + str(100 * np.mean((predicted_label_b == test_label).astype(float))) + '%')
-"""
+
